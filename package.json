@@ -1,0 +1,22 @@
+{
+  "name": "stockly-pdf-service",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Stockly PDF microservice (Express + Playwright)",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "helmet": "^7.2.0",
+    "playwright": "^1.52.0",
+    "zod": "^3.24.2"
+  }
+}
+
