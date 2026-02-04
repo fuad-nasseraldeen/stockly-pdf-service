@@ -35,11 +35,6 @@ app.post("/pdf/table", requireApiKey, async (req, res) => {
 });
 
 const port = Number(process.env.PORT) || 3000;
-
-const API_KEY = process.env.PDF_API_KEY;
-if (!API_KEY) {
-  throw new Error('PDF_API_KEY is not defined');
-}
 const server = app.listen(port, () => {
   console.log(`stockly-pdf-service listening on port ${port}`);
 });
