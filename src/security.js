@@ -1,8 +1,8 @@
 function requireApiKey(req, res, next) {
-  const configured = process.env.API_KEY;
+  const configured = process.env.PDF_API_KEY;
   if (!configured) {
     return res.status(500).json({
-      error: "Server misconfigured: API_KEY env var is required"
+      error: "Server misconfigured: PDF_API_KEY env var is required"
     });
   }
 

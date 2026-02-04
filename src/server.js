@@ -7,6 +7,57 @@ const { renderTablePdf, shutdownPdf } = require("./pdf");
 
 const app = express();
 
+// Basic CORS allowlist middleware
+const DEFAULT_ALLOWED_ORIGINS = [
+  "http://localhost:5173",
+  "http://localhost:3000"
+];
+
+const ENV_ORIGINS = process.env.FRONTEND_ORIGINS
+  ? process.env.FRONTEND_ORIGINS.split(",").map((origin) => origin.trim()).filter(Boolean)
+  : [];
+
+const ALLOWED_ORIGINS = ENV_ORIGINS.length > 0 ? ENV_ORIGINS : DEFAULT_ALLOWED_ORIGINS;
+
+function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  if (ALLOWED_ORIGINS.includes(origin)) return true;
+  // Always allow any *.vercel.app frontend
+  return origin.endsWith(".vercel.app");
+}
+
+app.use((req, res, next) => {
+  const origin = req.header("Origin");
+
+  if (origin && isAllowedOrigin(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Vary", "Origin");
+    res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, x-api-key");
+    // cache successful preflight responses
+    res.header("Access-Control-Max-Age", "600");
+  }
+
+  if (req.method === "OPTIONS") {
+    // Fast path for preflight requests, no auth required
+    return res.sendStatus(204);
+  }
+
+  next();
+});
+
+// Minimal logging for /pdf/* routes
+app.use("/pdf", (req, res, next) => {
+  const start = Date.now();
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    console.log(
+      `[pdf] ${req.method} ${req.originalUrl} -> ${res.statusCode} (${duration}ms)`
+    );
+  });
+  next();
+});
+
 app.use(helmet());
 app.use(express.json({ limit: "2mb" }));
 

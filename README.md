@@ -5,14 +5,14 @@ Small PDF microservice for Stockly (Node.js + Express + Playwright). Designed to
 ## Requirements
 
 - Node.js 18+
-- An environment variable `API_KEY` (required)
+- An environment variable `PDF_API_KEY` (required)
 
 ## Local run
 
 ```bash
 cd stockly-pdf-service
 npm install
-API_KEY=dev-key npm start
+PDF_API_KEY=dev-key npm start
 ```
 
 Health check:
@@ -38,6 +38,6 @@ Create a new **Web Service** and set:
 - **Build Command**: `npm install`
 - **Start Command**: `npm start`
 - **Environment Variables**:
-  - `API_KEY`: your secret API key
+  - `PDF_API_KEY`: your secret API key
 
 Render will provide `PORT` automatically; the service listens on `process.env.PORT`.

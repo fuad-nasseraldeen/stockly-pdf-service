@@ -1,1 +1,1 @@
-{"error":"Server misconfigured: API_KEY env var is required"}
+{"error":"Server misconfigured: PDF_API_KEY env var is required"}
