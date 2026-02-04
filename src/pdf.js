@@ -3,6 +3,14 @@ const { buildTableHtml } = require("./renderTableHtml");
 
 let _browser;
 
+async function checkBrowser() {
+  const browser = await chromium.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"]
+  });
+  await browser.close();
+}
+
 async function getBrowser() {
   if (_browser) return _browser;
 
@@ -28,6 +36,7 @@ async function renderTablePdf(payload) {
       format: "A4",
       landscape: true,
       printBackground: true,
+      preferCSSPageSize: true,
       displayHeaderFooter: true,
       headerTemplate: `<div style="font-size:1px;"></div>`,
       footerTemplate: `
@@ -60,5 +69,5 @@ async function shutdownPdf() {
   }
 }
 
-module.exports = { renderTablePdf, shutdownPdf };
+module.exports = { renderTablePdf, shutdownPdf, checkBrowser };
 

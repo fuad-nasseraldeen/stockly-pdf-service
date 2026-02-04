@@ -3,7 +3,7 @@ const helmet = require("helmet");
 
 const { requireApiKey } = require("./security");
 const { PdfTableRequestSchema } = require("./schema");
-const { renderTablePdf, shutdownPdf } = require("./pdf");
+const { renderTablePdf, shutdownPdf, checkBrowser } = require("./pdf");
 
 const app = express();
 
@@ -65,6 +65,19 @@ app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
 
+app.get("/debug/browser", async (req, res) => {
+  try {
+    await checkBrowser();
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("Playwright chromium launch failed:", err.stack || err);
+    res.status(500).json({
+      ok: false,
+      error: err.message
+    });
+  }
+});
+
 app.post("/pdf/table", requireApiKey, async (req, res) => {
   const parsed = PdfTableRequestSchema.safeParse(req.body);
   if (!parsed.success) {
@@ -80,14 +93,24 @@ app.post("/pdf/table", requireApiKey, async (req, res) => {
     res.setHeader("Content-Disposition", 'inline; filename="table.pdf"');
     return res.status(200).send(pdf);
   } catch (err) {
-    console.error("PDF render failed:", err);
-    return res.status(500).json({ error: "Failed to generate PDF" });
+    console.error("PDF render failed:", err.stack || err);
+    return res.status(500).json({
+      error: "Failed to generate PDF",
+      details: err.message
+    });
   }
 });
 
 const port = Number(process.env.PORT) || 3000;
-const server = app.listen(port, () => {
+const server = app.listen(port, async () => {
   console.log(`stockly-pdf-service listening on port ${port}`);
+  // Startup self-check: verify Playwright can launch
+  try {
+    await checkBrowser();
+    console.log("Playwright chromium launch check: OK");
+  } catch (err) {
+    console.error("Playwright chromium launch failed:", err.stack || err);
+  }
 });
 
 async function shutdown(signal) {
