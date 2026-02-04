@@ -35,8 +35,8 @@ function buildTableHtml({ storeName, title, printedAtISO, rtl, columns, rows }) 
     .map((row) => {
       const tds = columns
         .map((c) => {
-          const val = Object.prototype.hasOwnProperty.call(row, c.id)
-            ? row[c.id]
+          const val = Object.prototype.hasOwnProperty.call(row, c.key)
+            ? row[c.key]
             : null;
           return `<td>${escapeHtml(formatCellValue(val))}</td>`;
         })
@@ -101,7 +101,7 @@ function buildTableHtml({ storeName, title, printedAtISO, rtl, columns, rows }) 
   <body>
     <div class="header">
       <div class="store">${escapeHtml(storeName)}</div>
-      <div class="meta">${escapeHtml(printedAtISO)}</div>
+      ${printedAtISO ? `<div class="meta">${escapeHtml(printedAtISO)}</div>` : ""}
       <div class="title">${escapeHtml(title)}</div>
     </div>
 
