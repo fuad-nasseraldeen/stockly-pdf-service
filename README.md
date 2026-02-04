@@ -35,7 +35,7 @@ curl -X POST "http://localhost:3000/pdf/table" ^
 
 Create a new **Web Service** and set:
 
-- **Build Command**: `npm install && npx playwright install chromium`
+- **Build Command**: `npm install`
 - **Start Command**: `npm start`
 - **Environment Variables**:
   - `PDF_API_KEY`: your secret API key

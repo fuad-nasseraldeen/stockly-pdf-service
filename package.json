@@ -7,8 +7,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node --watch src/server.js",
-    "postinstall": "npx playwright install chromium"
+    "dev": "node --watch src/server.js"
   },
   "engines": {
     "node": ">=18"
