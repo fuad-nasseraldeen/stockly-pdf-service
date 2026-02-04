@@ -15,10 +15,14 @@ function formatCellValue(value) {
 
 function buildTableHtml({ storeName, title, printedAtISO, rtl, columns, rows }) {
   const dir = rtl ? "rtl" : "ltr";
+  const lang = rtl ? "he" : "en";
   const alignStart = rtl ? "right" : "left";
   const alignEnd = rtl ? "left" : "right";
 
-  const colgroup = columns
+  // Reverse columns for RTL rendering (rightmost column first logically)
+  const renderColumns = rtl ? [...columns].reverse() : columns;
+
+  const colgroup = renderColumns
     .map((c) => {
       if (c.width && Number.isFinite(c.width)) {
         return `<col style="width:${c.width}mm" />`;
@@ -27,13 +31,13 @@ function buildTableHtml({ storeName, title, printedAtISO, rtl, columns, rows }) 
     })
     .join("");
 
-  const thead = `<thead><tr>${columns
+  const thead = `<thead><tr>${renderColumns
     .map((c) => `<th scope="col">${escapeHtml(c.label)}</th>`)
     .join("")}</tr></thead>`;
 
   const tbody = `<tbody>${rows
     .map((row) => {
-      const tds = columns
+      const tds = renderColumns
         .map((c) => {
           const val = Object.prototype.hasOwnProperty.call(row, c.key)
             ? row[c.key]
@@ -46,17 +50,22 @@ function buildTableHtml({ storeName, title, printedAtISO, rtl, columns, rows }) 
     .join("")}</tbody>`;
 
   return `<!doctype html>
-<html lang="en" dir="${dir}">
+<html lang="${lang}" dir="${dir}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet" />
     <style>
       @page { size: A4 landscape; margin: 12mm 10mm 12mm 10mm; }
       html, body { padding: 0; margin: 0; }
       body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+        font-family: "Assistant", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, "Noto Sans Hebrew", "Noto Sans", "Helvetica Neue", sans-serif;
         font-size: 10.5px;
         color: #111;
+        direction: ${dir};
+        unicode-bidi: plaintext;
       }
 
       .header {
@@ -90,6 +99,7 @@ function buildTableHtml({ storeName, title, printedAtISO, rtl, columns, rows }) 
         word-break: break-word;
         hyphens: auto;
         line-height: 1.25;
+        unicode-bidi: plaintext;
       }
       th {
         background: #f3f4f6;

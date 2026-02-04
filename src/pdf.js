@@ -30,6 +30,9 @@ async function renderTablePdf(payload) {
   try {
     const html = buildTableHtml(payload);
     await page.setContent(html, { waitUntil: "networkidle" });
+    
+    // Wait for fonts to load before generating PDF
+    await page.evaluate(() => document.fonts.ready);
 
     const showPageNumbers = payload.rtl ? "right" : "left";
     const pdfBuffer = await page.pdf({
