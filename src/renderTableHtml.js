@@ -119,12 +119,12 @@ function buildTableHtml({ storeName, printedAtISO, rtl, columns, rows }) {
       let style = "";
 
       if (c.key === "__index") style = `style="width:9mm"`;
-      else if (c.label === "שם מוצר") style = `style="width:42%"`;
-      else if (c.label === "ספק") style = `style="width:16%"`;
-      else if (c.label === "מק״ט") style = `style="width:12%"`;
-      else if (c.label && /תאריך/i.test(c.label)) style = `style="width:14%"`;
-      else if (c.label && /כמות/i.test(c.label)) style = `style="width:12mm"`;
-      else if (c.label && /מחיר|עלות/i.test(c.label)) style = `style="width:14mm"`;
+      else if (c.label === "שם מוצר") style = `style="width:30%"`;
+      else if (c.label === "ספק") style = `style="width:12%"`;
+      else if (c.label === "מק״ט") style = `style="width:8%"`;
+      else if (c.label && /תאריך/i.test(c.label)) style = `style="width:10%"`;
+      else if (c.label && /כמות/i.test(c.label)) style = `style="width:16mm"`;
+      else if (c.label && /מחיר|עלות/i.test(c.label)) style = `style="width:18mm"`;
       else style = `style="width:12mm"`; // default narrow
 
       return `<col ${style} />`;
@@ -204,7 +204,7 @@ function buildTableHtml({ storeName, printedAtISO, rtl, columns, rows }) {
       .header {
         display: flex;
         flex-direction: column;
-        align-items: flex-end; /* always right */
+        align-items: flex-start; /* always right */
         text-align: right;
         gap: 4px;
         margin-bottom: 10px;
@@ -251,7 +251,7 @@ function buildTableHtml({ storeName, printedAtISO, rtl, columns, rows }) {
         font-weight: 700;
       }
 
-      .th-number { text-align: left; }
+      .th-number { text-align: center; }
       .th-index { text-align: center; }
       .th-cost { font-weight: 700; }
 
@@ -274,7 +274,7 @@ function buildTableHtml({ storeName, printedAtISO, rtl, columns, rows }) {
 
       /* ✅ numeric columns */
       .td-number {
-        text-align: left;
+        text-align: center;
         white-space: nowrap;
         direction: ltr;
       }
@@ -299,10 +299,10 @@ function buildTableHtml({ storeName, printedAtISO, rtl, columns, rows }) {
       <div class="title">דוח מוצרים</div>
 
       <div class="meta-row">
-        <div class="meta-right">${escapeHtml(`סך הכול: ${totalCount} מוצרים`)}</div>
         <div class="meta-left">${
           formattedDate ? `תאריך הפקה: ${escapeHtml(formattedDate)}` : ""
         }</div>
+        <div class="meta-right">${escapeHtml(`סך הכול: ${totalCount} מוצרים`)}</div>
       </div>
     </div>
 
