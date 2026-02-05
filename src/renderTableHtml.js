@@ -54,6 +54,7 @@ function orderColumnsForDisplay(columns) {
     { label: "שם מוצר", alt: ["שם מוצר "] },
     { label: "ספק" },
     { label: "מק״ט", alt: ["מקט", 'מק"ת', "SKU"] },
+    { label: "הנחה", alt: ["הנחה", "הנחה"] }
 
     // prices
     { label: 'מחיר לפני מע"מ', alt: ['מחיר לפני מע״מ', 'מחיר לפני מע"מ '] },
